@@ -1,6 +1,3 @@
-//MISC
-const static = "public/"
-
 //UI Elements
 const selectUnit = document.querySelector("#select-unit");
 const unitName = document.querySelector(".unit-name");
@@ -49,8 +46,8 @@ const unitResistCharm = document.querySelector("#unit-resist-charm")
 const unitResistStop = document.querySelector("#unit-resist-stop")
 
 //Data
-let unitDataSource = "public/data/units.json"
-let equipmentDataSource = "public/data/equipment.json"
+let unitDataSource = "/data/units.json"
+let equipmentDataSource = "/data/equipment.json"
 let units;
 let equipment;
 let selectedUnit;
