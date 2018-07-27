@@ -1,3 +1,6 @@
+//MISC
+const static = "public/"
+
 //UI Elements
 const selectUnit = document.querySelector("#select-unit");
 const unitName = document.querySelector(".unit-name");
@@ -34,10 +37,20 @@ const unitResistWind = document.querySelector("#unit-resist-wind");
 const unitResistEarth = document.querySelector("#unit-resist-earth");
 const unitResistHoly = document.querySelector("#unit-resist-holy");
 const unitResistDark = document.querySelector("#unit-resist-dark");
+const unitResistPoison = document.querySelector("#unit-resist-poison")
+const unitResistBlind = document.querySelector("#unit-resist-blind")
+const unitResistSleep = document.querySelector("#unit-resist-sleep")
+const unitResistSilence = document.querySelector("#unit-resist-silence")
+const unitResistParalysis = document.querySelector("#unit-resist-paralysis")
+const unitResistConfuse = document.querySelector("#unit-resist-confuse")
+const unitResistPetrification = document.querySelector("#unit-resist-petrification")
+const unitResistDisease = document.querySelector("#unit-resist-disease")
+const unitResistCharm = document.querySelector("#unit-resist-charm")
+const unitResistStop = document.querySelector("#unit-resist-stop")
 
 //Data
-let unitDataSource = "/data/units.json";
-let equipmentDataSource = "/data/equipment.json"
+let unitDataSource = "public/data/units.json"
+let equipmentDataSource = "public/data/equipment.json"
 let units;
 let equipment;
 let selectedUnit;
@@ -168,14 +181,7 @@ $(function () {
         selectedUnit.equipment.materia2 = equipment.find(equip => equip.id == equipMateria2.value);
         selectedUnit.equipment.materia3 = equipment.find(equip => equip.id == equipMateria3.value);
         selectedUnit.equipment.materia4 = equipment.find(equip => equip.id == equipMateria4.value);
-
-        unitName.textContent = selectedUnit.name;
-        calcStats(selectedUnit);
-
-    }
-
-    function calcStats(unit) {
-        let stats = {
+        selectedUnit.stats = {
             hp: 0,
             mp: 0,
             atk: 0,
@@ -191,101 +197,114 @@ $(function () {
             provoke: 0,
             pEvade: 0,
             mEvade: 0,
-            resistFire: 0,
-            resistIce: 0,
-            resistLightning: 0,
-            resistWater: 0,
-            resistWind: 0,
-            resistEarth: 0,
-            resistHoly: 0,
-            resistDark: 0
-        }
+        };
 
-        unit.stats = stats;
-        console.log(unit);
-        Object.entries(unit.equipment).forEach((slot) => {
-            if (slot[1].hp != null) {
-                unit.stats.hp += parseInt(slot[1].hp);
-            }
-            if (slot[1].hpPercent != null) {
-                unit.stats.hpPercent += parseInt(slot[1].hpPercent);
-            }
-            if (slot[1].mp != null) {
-                unit.stats.mp += parseInt(slot[1].mp);
-            }
-            if (slot[1].mpPercent != null) {
-                unit.stats.mpPercent += parseInt(slot[1].mpPercent);
-            }
-            if (slot[1].atk != null) {
-                unit.stats.atk += parseInt(slot[1].atk);
-            }
-            if (slot[1].atkPercent != null) {
-                unit.stats.atkPercent += parseInt(slot[1].atkPercent);
-            }
-            if (slot[1].mag != null) {
-                unit.stats.mag += parseInt(slot[1].mag);
-            }
-            if (slot[1].magPercent != null) {
-                unit.stats.magPercent += parseInt(slot[1].magPercent);
-            }
-            if (slot[1].def != null) {
-                unit.stats.def += parseInt(slot[1].def);
-            }
-            if (slot[1].defPercent != null) {
-                unit.stats.defPercent += parseInt(slot[1].defPercent);
-            }
+        selectedUnit.resists = {
+            fire: 0,
+            ice: 0,
+            lightning: 0,
+            water: 0,
+            wind: 0,
+            earth: 0,
+            holy: 0,
+            dark: 0,
+            poison: 0,
+            blind: 0,
+            sleep: 0,
+            silence: 0,
+            paralysis: 0,
+            confuse: 0,
+            disease: 0,
+            petrification: 0,
+            charm: 0,
+            stop: 0
+        };
+        calcStats(selectedUnit);
+        calcResists(selectedUnit);
 
-            if (slot[1].spr != null) {
-                unit.stats.spr += parseInt(slot[1].spr);
-            }
-            if (slot[1].sprPercent != null) {
-                unit.stats.sprPercent += parseInt(slot[1].sprPercent);
-            }
-            if (slot[1].provoke != null) {
-                unit.stats.provoke += parseInt(slot[1].provoke);
-            }
-            if (slot[1].evade != null) {
-                if (slot[1].evade.physical != null) {
-                    unit.stats.pEvade += parseInt(slot[1].evade.physical);
+        displayUnit(selectedUnit);
+    }
+
+    function calcStats(unit) {
+        /*
+        Cycles through unit slots
+        Cycles through stats of each item
+        */
+
+        $.each(unit.equipment, function (slot, item) {
+            $.each(item, function (mod, itemValue) {
+                if (mod == "atk")
+                    unit.stats.atk += itemValue;
+                if (mod == "atkPercent")
+                    unit.stats.atkPercent += itemValue;
+                if (mod == "mag")
+                    unit.stats.mag += itemValue;
+                if (mod == "magPercent")
+                    unit.stats.magPercent += itemValue;
+                if (mod == "def")
+                    unit.stats.def += itemValue;
+                if (mod == "defPercent")
+                    unit.stats.defPercent += itemValue;
+                if (mod == "evade") {
+                    $.each(itemValue, function (evadeType, value) {
+                        if (evadeType == "physical")
+                            unit.stats.pEvade += value;
+                        if (evadeType == "magical")
+                            unit.stats.mEvade += value;
+                    })
                 }
+            })
+        })
+    }
 
-                if (slot[1].evade.magical != null) {
-                    unit.stats.mEvade += parseInt(slot[1].evade.magical);
-                }
-            }
-
-
-
-            if (slot[1].resist != null) {
-                slot[1].resist.forEach(function (resist) {
-                    if (resist.name == "fire") {
-                        unit.stats.resistFire += resist.percent;
-                    }
-
-                    if (resist.name == "ice") {
-                        unit.stats.resistIce += resist.percent;
-                    }
-                    if (resist.name == "lightning") {
-                        unit.stats.resistLightning += resist.percent;
-                    }
-                    if (resist.name == "water") {
-                        unit.stats.resistWater += resist.percent;
-                    }
-                    if (resist.name == "wind") {
-                        unit.stats.resistWind += resist.percent;
-                    }
-                    if (resist.name == "earth") {
-                        unit.stats.resistEarth += resist.percent;
-                    }
-                    if (resist.name == "light") {
-                        unit.stats.resistHoly += resist.percent;
-                    }
-                    if (resist.name == "dark") {
-                        unit.stats.resistDark += resist.percent;
-                    }
+    function calcResists(unit) {
+        $.each(unit.equipment, function (slot, item) {
+            if (item.resist != null) {
+                $.each(item.resist, function (index, resist) {
+                    console.log(item.name + ": " + resist.name + " + " + resist.percent)
+                    if (resist.name == "fire")
+                        unit.resists.fire += resist.percent;
+                    if (resist.name == "ice")
+                        unit.resists.ice = resist.percent;
+                    if (resist.name == "lightning")
+                        unit.resists.lightning += resist.percent;
+                    if (resist.name == "wind")
+                        unit.resists.wind += resist.percent;
+                    if (resist.name == "water")
+                        unit.resists.water += resist.percent;
+                    if (resist.name == "earth")
+                        unit.resists.earth += resist.percent;
+                    if (resist.name == "light")
+                        unit.resists.holy += resist.percent;
+                    if (resist.name == "dark")
+                        unit.resists.dark += resist.percent;
+                    if (resist.name == "poison")
+                        unit.resists.poison += resist.percent;
+                    if (resist.name == "blind")
+                        unit.resists.blind += resist.percent;
+                    if (resist.name == "sleep")
+                        unit.resists.sleep += resist.percent;
+                    if (resist.name == "silence")
+                        unit.resists.silence += resist.percent;
+                    if (resist.name == "paralysis")
+                        unit.resists.paralysis += resist.percent;
+                    if (resist.name == "confuse")
+                        unit.resists.confuse += resist.percent;
+                    if (resist.name == "disease")
+                        unit.resists.disease += resist.percent;
+                    if (resist.name == "petrification")
+                        unit.resists.petrification += resist.percent;
+                    if (resist.name == "charm")
+                        unit.resists.charm += resist.percent;
+                    if (resist.name == "stop")
+                        unit.resists.stop += resist.percent;
                 })
             }
         })
+    }
+
+    function displayUnit(unit) {
+        unitName.textContent = selectedUnit.name;
         unitHp.textContent = unit.stats.hp;
         unitMp.textContent = unit.stats.mp;
         unitAtk.textContent = unit.stats.atk;
@@ -301,14 +320,24 @@ $(function () {
         unitProvoke.textContent = unit.stats.provoke;
         unitPEvade.textContent = unit.stats.pEvade;
         unitMEvade.textContent = unit.stats.mEvade;
-        unitResistFire.textContent = unit.stats.resistFire;
-        unitResistIce.textContent = unit.stats.resistIce;
-        unitResistLightning.textContent = unit.stats.resistLightning;
-        unitResistWater.textContent = unit.stats.resistWater;
-        unitResistWind.textContent = unit.stats.resistWind
-        unitResistEarth.textContent = unit.stats.resistEarth;
-        unitResistHoly.textContent = unit.stats.resistHoly;
-        unitResistDark.textContent = unit.stats.resistDark;
+        unitResistFire.textContent = unit.resists.fire;
+        unitResistIce.textContent = unit.resists.ice;
+        unitResistLightning.textContent = unit.resists.lightning;
+        unitResistWater.textContent = unit.resists.water;
+        unitResistWind.textContent = unit.resists.wind
+        unitResistEarth.textContent = unit.resists.earth;
+        unitResistHoly.textContent = unit.resists.holy;
+        unitResistDark.textContent = unit.resists.dark;
+        unitResistPoison.textContent = unit.resists.poison;
+        unitResistBlind.textContent = unit.resists.blind;
+        unitResistSleep.textContent = unit.resists.sleep;
+        unitResistSilence.textContent = unit.resists.silence;
+        unitResistParalysis.textContent = unit.resists.paralysis;
+        unitResistConfuse.textContent = unit.resists.confuse;
+        unitResistPetrification.textContent = unit.resists.petrification;
+        unitResistDisease.textContent = unit.resists.disease;
+        unitResistCharm.textContent = unit.resists.charm;
+        unitResistStop.textContent = unit.resists.stop;
         console.log(unit)
     }
 })
