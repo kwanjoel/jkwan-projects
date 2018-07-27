@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>FFBE Unit Calculator</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
+        crossorigin="anonymous">
+</head>
+
+<body class="grey darken-3">
+    <div class="container">
+        <div class="row">
+            <div class="card col s12 grey lighten-5">
+                <div class="card-content">
+                    <div class="card-title">
+                        <h4>FFBE Unit Calculator</h4>
+                    </div>
+                    <div class="card-action">
+                        <div class="unit">
+                            <!-- Select unit -->
+                            <div class="card">
+                                <div class="card-content">
+                                    <div class="input-field col s12">
+                                        <select id="select-unit" class="select-unit">
+                                        </select>
+                                        <label>Select a unit</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Unit Stats-->
+                            <div class="card">
+                                <div class="card-content">
+                                    <div class="col s12">
+                                        <h3 class="card-title unit-name">Unit Name</h5>
+                                    </div>
+                                    <div class="col s7">
+                                        <table id="main-stats">
+                                            <thead>
+                                                <th>HP</th>
+                                                <th>MP</th>
+                                                <th>ATK</th>
+                                                <th>MAG</th>
+                                                <th>DEF</th>
+                                                <th>SPR</th>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td id="unit-hp"></td>
+                                                    <td id="unit-mp"></td>
+                                                    <td id="unit-atk"></td>
+                                                    <td id="unit-mag"></td>
+                                                    <td id="unit-def"></td>
+                                                    <td id="unit-spr"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td id="unit-hp-percent"></td>
+                                                    <td id="unit-mp-percent"></td>
+                                                    <td id="unit-atk-percent"></td>
+                                                    <td id="unit-mag-percent"></td>
+                                                    <td id="unit-def-percent"></td>
+                                                    <td id="unit-spr-percent"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col s3">
+                                        <table id="misc-stats">
+                                            <thead>
+                                                <th>Provoke</th>
+                                                <th>pEvade</th>
+                                                <th>mEvade</th>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td id="unit-provoke"></td>
+                                                    <td id="unit-pEvade"></td>
+                                                    <td id="unit-mEvade"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col 12">
+                                        <table id="resists">
+                                            <thead>
+                                                <th>Fire</th>
+                                                <th>Cold</th>
+                                                <th>Lightning</th>
+                                                <th>Wind</th>
+                                                <th>Water</th>
+                                                <th>Earth</th>
+                                                <th>Holy</th>
+                                                <th>Dark</th>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td id="unit-resist-fire"></td>
+                                                    <td id="unit-resist-ice"></td>
+                                                    <td id="unit-resist-lightning"></td>
+                                                    <td id="unit-resist-wind"></td>
+                                                    <td id="unit-resist-water"></td>
+                                                    <td id="unit-resist-earth"></td>
+                                                    <td id="unit-resist-holy"></td>
+                                                    <td id="unit-resist-dark"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Unit Equips -->
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="col s12">
+                                    <h5 class="card-title equipment">Equipment</h5>
+                                </div>
+                                <div class="col s6">
+                                    <div class="input-field">
+                                        <select id="equip-right-hand" class="equip-right-hand">
+                                        </select>
+                                        <label>Right hand</label>
+                                    </div>
+                                </div>
+                                <div class="col s6">
+                                    <div class="input-field">
+                                        <select id="equip-left-hand" class="equip-left-hand">
+                                        </select>
+                                        <label>Left hand</label>
+                                    </div>
+                                </div>
+                                <div class="col s6">
+                                    <div class="input-field">
+                                        <select id="equip-head" class="equip-head">
+                                        </select>
+                                        <label>Head</label>
+                                    </div>
+                                </div>
+                                <div class="col s6">
+                                    <div class="input-field">
+                                        <select id="equip-body" class="equip-body">
+                                        </select>
+                                        <label>Body</label>
+                                    </div>
+                                </div>
+                                <div class="col s6">
+                                    <div class="input-field">
+                                        <select id="equip-accessory-1" class="equip-accessory-1">
+                                        </select>
+                                        <label>Accessory 1</label>
+                                    </div>
+                                </div>
+                                <div class="col s6">
+                                    <div class="input-field">
+                                        <select id="equip-accessory-2" class="equip-accessory-2">
+                                        </select>
+                                        <label>Accessory 2</label>
+                                    </div>
+                                </div>
+                                <div class="col s12">
+                                    <h5 class="card-title pt-5">Materia</h5>
+                                </div>
+                                <div class="col s6">
+                                    <div class="input-field">
+                                        <select id="equip-materia-1" class="equip-materia-1">
+                                        </select>
+                                        <label>Slot 1</label>
+                                    </div>
+                                </div>
+                                <div class="col s6">
+                                    <div class="input-field">
+                                        <select id="equip-materia-2" class="equip-materia-2">
+                                        </select>
+                                        <label>Slot 2</label>
+                                    </div>
+                                </div>
+                                <div class="col s6">
+                                    <div class="input-field">
+                                        <select id="equip-materia-3" class="equip-materia-3">
+                                        </select>
+                                        <label>Slot 3</label>
+                                    </div>
+                                </div>
+                                <div class="col s6">
+                                    <div class="input-field">
+                                        <select id="equip-materia-4" class="equip-materia-4">
+                                        </select>
+                                        <label>Slot 4</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Scripts -->
+    <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
+
+    <script src="/scripts/main.js"></script>
+</body>
+
+</html>
