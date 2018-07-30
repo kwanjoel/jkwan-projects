@@ -6,12 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>JKwan Projects</title>
-    <link rel="shortcut icon" type="image/x-icon" href="/images/doge.jpg">
+    <link rel="shortcut icon" type="image/x-icon" href="public/images/doge.jpg">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
         crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
         crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    <link href="css/main.css" rel="stylesheet" />
+
 </head>
 
 <body class="grey darken-3">
@@ -27,27 +30,24 @@
                             <!-- Select unit -->
                             <div class="card">
                                 <div class="card-content">
-                                    <div class="input-field col-md-12">
-                                        <select id="select-unit" class="select-unit">
-                                        </select>
-                                        <label>Select a unit</label>
-                                    </div>
+                                    <label for="filter-units">Select a unit</label>
+                                    <input type="text" id="filter-units">
+                                </div>
+                                <div class="col-md-12">
+                                    <ul class="collection" id="unit-collection">
+                                    </ul>
                                 </div>
                             </div>
-
                             <!-- Unit Stats-->
                             <div class="card">
                                 <div class="card-content">
                                     <div class="row">
-
                                         <div class="col-md-12">
                                             <h3 class="card-title unit-name">Unit Name</h5>
                                         </div>
                                     </div>
 
                                     <div class="row">
-
-
                                         <div class="col-sm-6">
                                             <table id="main-stats">
                                                 <thead>
@@ -138,6 +138,7 @@
                                                     <th>Petrify</th>
                                                     <th>Charm</th>
                                                     <th>Stop</th>
+                                                    <th>Death</th>
                                                 </thead>
                                                 <tbody>
                                                     <tr>
@@ -151,6 +152,7 @@
                                                         <td id="unit-resist-petrification"></td>
                                                         <td id="unit-resist-charm"></td>
                                                         <td id="unit-resist-stop"></td>
+                                                        <td id="unit-resist-death"></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -163,80 +165,136 @@
                         <!-- Unit Equips -->
                         <div class="card">
                             <div class="card-content">
-                                <div class="col s12">
-                                    <h5 class="card-title equipment">Equipment</h5>
-                                </div>
-                                <div class="col s6">
-                                    <div class="input-field">
-                                        <select id="equip-right-hand" class="equip-right-hand">
-                                        </select>
-                                        <label>Right hand</label>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h5 class="card-title equipment">Equipment</h5>
                                     </div>
                                 </div>
-                                <div class="col s6">
-                                    <div class="input-field">
-                                        <select id="equip-left-hand" class="equip-left-hand">
-                                        </select>
-                                        <label>Left hand</label>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="input-field">
+                                            <input type="text" class="" id="filter-right-hand">
+                                            <label for="filter-left-hand">Right hand</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="input-field">
+                                            <input type="text" class="" id="filter-left-hand">
+                                            <label for="filter-left-hand">Left hand</label>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col s6">
-                                    <div class="input-field">
-                                        <select id="equip-head" class="equip-head">
-                                        </select>
-                                        <label>Head</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <ul class="collection" id="equip-right-hand"></ul>
+                                    </div>
+                                    <div class="col-md-6 offset-md-6">
+                                        <ul class="collection" id="equip-left-hand"></ul>
                                     </div>
                                 </div>
-                                <div class="col s6">
-                                    <div class="input-field">
-                                        <select id="equip-body" class="equip-body">
-                                        </select>
-                                        <label>Body</label>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="input-field">
+                                            <input type="text" id="filter-head">
+                                            </input>
+                                            <label>Head</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="input-field">
+                                            <input type="text" id="filter-body">
+                                            <label for="filter-body">Body</label>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col s6">
-                                    <div class="input-field">
-                                        <select id="equip-accessory-1" class="equip-accessory-1">
-                                        </select>
-                                        <label>Accessory 1</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <ul class="collection" id="equip-head"></ul>
+                                    </div>
+                                    <div class="col-md-6 offset-md-6">
+                                        <ul class="collection" id="equip-body"></ul>
                                     </div>
                                 </div>
-                                <div class="col s6">
-                                    <div class="input-field">
-                                        <select id="equip-accessory-2" class="equip-accessory-2">
-                                        </select>
-                                        <label>Accessory 2</label>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="input-field ">
+                                            <input type="text" id="filter-accessory-1">
+                                            </input>
+                                            <label for="filter-accessory-1">Accessory 1</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="input-field">
+                                            <input type="text" id="filter-accessory-2">
+                                            </input>
+                                            <label for="filter-accessory-2">Accessory 2</label>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col s12">
-                                    <h5 class="card-title pt-5">Materia</h5>
-                                </div>
-                                <div class="col s6">
-                                    <div class="input-field">
-                                        <select id="equip-materia-1" class="equip-materia-1">
-                                        </select>
-                                        <label>Slot 1</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <ul class="collection" id="equip-accessory-1"></ul>
+                                    </div>
+                                    <div class="col-md-6 offset-md-6">
+                                        <ul class="collection" id="equip-accessory-2"></ul>
                                     </div>
                                 </div>
-                                <div class="col s6">
-                                    <div class="input-field">
-                                        <select id="equip-materia-2" class="equip-materia-2">
-                                        </select>
-                                        <label>Slot 2</label>
+
+                                <div class="row">
+                                    <div class="col-md-12 ">
+                                        <h5 class="card-title">Materia</h5>
                                     </div>
                                 </div>
-                                <div class="col s6">
-                                    <div class="input-field">
-                                        <select id="equip-materia-3" class="equip-materia-3">
-                                        </select>
-                                        <label>Slot 3</label>
+                                <div class="row">
+                                    <div class="col-md-6 ">
+                                        <div class="input-field ">
+                                            <input type="text" id="filter-materia-1">
+                                            </input>
+                                            <label for="filter-materia-1">Slot 1</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="input-field ">
+                                            <input type="text" id="filter-materia-2">
+                                            </input>
+                                            <label for="filter-materia-2">Slot 2</label>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col s6">
-                                    <div class="input-field">
-                                        <select id="equip-materia-4" class="equip-materia-4">
-                                        </select>
-                                        <label>Slot 4</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <ul class="collection" id="equip-materia-1"></ul>
+                                    </div>
+                                    <div class="col-md-6 offset-md-6">
+                                        <ul class="collection" id="equip-materia-2"></ul>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="input-field">
+                                            <input type="text" id="filter-materia-3">
+                                            </input>
+                                            <label for="filter-materia-3">Slot 3</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="input-field">
+                                            <input type="text" id="filter-materia-4">
+                                            </input>
+                                            <label for="filter-materia-4">Slot 4</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <ul class="collection" id="equip-materia-3"></ul>
+                                    </div>
+                                    <div class="col-md-6 offset-md-6">
+                                        <ul class="collection" id="equip-materia-4"></ul>
                                     </div>
                                 </div>
                             </div>
@@ -249,16 +307,15 @@
     </div>
 
     <!-- Scripts -->
-
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
-
-    <script src="/scripts/main.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js " integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin=" anonymous "></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js " integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q "
+        crossorigin="anonymous "></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js " integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl "
+        crossorigin="anonymous "></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js "></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js "></script>
+    <script src="/scripts/main.js "></script>
 
 </body>
 
