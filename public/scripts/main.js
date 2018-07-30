@@ -59,8 +59,8 @@ const unitResistStop = document.querySelector("#unit-resist-stop");
 const unitResistDeath = document.querySelector("#unit-resist-death");
 
 //Data
-let unitDataSource = "public/data/units.json"
-let equipmentDataSource = "public/data/equipment.json"
+let unitDataSource = "/data/units.json"
+let equipmentDataSource = "/data/equipment.json"
 let units;
 let equipment;
 let selectedUnit;
