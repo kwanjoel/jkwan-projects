@@ -1,6 +1,17 @@
+//MISC
 //UI Elements
-const selectUnit = document.querySelector("#select-unit");
-const unitName = document.querySelector(".unit-name");
+const filterUnits = document.querySelector("#filter-units");
+const filterRHand = document.querySelector("#filter-right-hand");
+const filterLHand = document.querySelector("#filter-left-hand");
+const filterHead = document.querySelector("#filter-head");
+const filterBody = document.querySelector("#filter-body");
+const filterAccessory1 = document.querySelector("#filter-accessory-1");
+const filterAccessory2 = document.querySelector("#filter-accessory-2");
+const filterMateria1 = document.querySelector("#filter-materia-1");
+const filterMateria2 = document.querySelector("#filter-materia-2");
+const filterMateria3 = document.querySelector("#filter-materia-3");
+const filterMateria4 = document.querySelector("#filter-materia-4");
+const unitCollection = document.querySelector("#unit-collection");
 const equipLHand = document.querySelector("#equip-left-hand");
 const equipRHand = document.querySelector("#equip-right-hand");
 const equipHead = document.querySelector("#equip-head");
@@ -11,6 +22,7 @@ const equipMateria1 = document.querySelector("#equip-materia-1");
 const equipMateria2 = document.querySelector("#equip-materia-2");
 const equipMateria3 = document.querySelector("#equip-materia-3");
 const equipMateria4 = document.querySelector("#equip-materia-4");
+const unitName = document.querySelector(".unit-name");
 const unitHp = document.querySelector("#unit-hp");
 const unitMp = document.querySelector("#unit-mp");
 const unitAtk = document.querySelector("#unit-atk");
@@ -34,24 +46,24 @@ const unitResistWind = document.querySelector("#unit-resist-wind");
 const unitResistEarth = document.querySelector("#unit-resist-earth");
 const unitResistHoly = document.querySelector("#unit-resist-holy");
 const unitResistDark = document.querySelector("#unit-resist-dark");
-const unitResistPoison = document.querySelector("#unit-resist-poison")
-const unitResistBlind = document.querySelector("#unit-resist-blind")
-const unitResistSleep = document.querySelector("#unit-resist-sleep")
-const unitResistSilence = document.querySelector("#unit-resist-silence")
-const unitResistParalysis = document.querySelector("#unit-resist-paralysis")
-const unitResistConfuse = document.querySelector("#unit-resist-confuse")
-const unitResistPetrification = document.querySelector("#unit-resist-petrification")
-const unitResistDisease = document.querySelector("#unit-resist-disease")
-const unitResistCharm = document.querySelector("#unit-resist-charm")
-const unitResistStop = document.querySelector("#unit-resist-stop")
+const unitResistPoison = document.querySelector("#unit-resist-poison");
+const unitResistBlind = document.querySelector("#unit-resist-blind");
+const unitResistSleep = document.querySelector("#unit-resist-sleep");
+const unitResistSilence = document.querySelector("#unit-resist-silence");
+const unitResistParalysis = document.querySelector("#unit-resist-paralysis");
+const unitResistConfuse = document.querySelector("#unit-resist-confuse");
+const unitResistPetrification = document.querySelector("#unit-resist-petrification");
+const unitResistDisease = document.querySelector("#unit-resist-disease");
+const unitResistCharm = document.querySelector("#unit-resist-charm");
+const unitResistStop = document.querySelector("#unit-resist-stop");
+const unitResistDeath = document.querySelector("#unit-resist-death");
 
 //Data
-let unitDataSource = "/data/units.json"
-let equipmentDataSource = "/data/equipment.json"
+let unitDataSource = "public/data/units.json"
+let equipmentDataSource = "public/data/equipment.json"
 let units;
 let equipment;
 let selectedUnit;
-let selectedValues;
 
 $(function () {
     console.log("Ready");
@@ -59,79 +71,74 @@ $(function () {
     loadEventListeners();
 
 
+
+
+
+
     function intializeData() {
         $.get(unitDataSource, (data) => {
             units = data;
-            units.sort((a, b) => { return a.name > b.name })
             units.forEach(function (unit) {
-                let option = document.createElement("option");
-                option.value = unit.id;
-                option.textContent = unit.name;
-                selectUnit.appendChild(option);
+                setCollectionItem(unitCollection, "unit-item", unit)
 
             })
+
         }).then(function () {
             $.get(equipmentDataSource, (data) => {
                 equipment = data;
-                equipment.sort((a, b) => { return a.name > b.name });
                 equipment.forEach(function (equip) {
                     let slot = whichSlot(equip);
-                    let option = document.createElement("option");
-                    option.value = equip.id;
-                    option.textContent = equip.name;
 
                     if (slot == "weapon") {
-                        let option2 = document.createElement("option");
-                        option2.value = equip.id;
-                        option2.textContent = equip.name;
-                        equipLHand.appendChild(option);
-                        equipRHand.appendChild(option2);
+                        setCollectionItem(equipLHand, "lHand-item", equip);
+                        setCollectionItem(equipRHand, "rHand-item", equip)
+
                     }
 
                     else if (slot == "head") {
-                        equipHead.appendChild(option);
+                        setCollectionItem(equipHead, "head-item", equip);
                     }
 
                     else if (slot == "body") {
-                        equipBody.appendChild(option);
+                        setCollectionItem(equipBody, "body-item", equip);
                     }
 
                     else if (slot == "accessory") {
-                        let option2 = document.createElement("option");
-                        option2.value = equip.id;
-                        option2.textContent = equip.name;
-                        equipAccessory1.appendChild(option);
-                        equipAccessory2.appendChild(option2);
+                        setCollectionItem(equipAccessory1, "accessory1-item", equip);
+                        setCollectionItem(equipAccessory2, "accessory2-item", equip);
+
                     }
 
                     else if (slot == "materia") {
-                        let option2 = document.createElement("option");
-                        option2.value = equip.id;
-                        option2.textContent = equip.name;
-
-                        let option3 = document.createElement("option");
-                        option3.value = equip.id;
-                        option3.textContent = equip.name;
-
-                        let option4 = document.createElement("option");
-                        option4.value = equip.id;
-                        option4.textContent = equip.name;
-
-                        equipMateria1.appendChild(option);
-                        equipMateria2.appendChild(option2);
-                        equipMateria3.appendChild(option3);
-                        equipMateria4.appendChild(option4);
+                        setCollectionItem(equipMateria1, "materia1-item", equip);
+                        setCollectionItem(equipMateria2, "materia2-item", equip);
+                        setCollectionItem(equipMateria3, "materia3-item", equip);
+                        setCollectionItem(equipMateria4, "materia4-item", equip);
                     }
                 })
 
 
             }).then(function () {
-                $('select').formSelect();
+                document.querySelectorAll(".collection").forEach(function (collection) {
+                    collection.parentElement.style.display = "none";
+                })
+
+
+                generateUnit();
             })
         })
     }
 
 
+    function setCollectionItem(slot, slotClass, item) {
+        let option = document.createElement("a");
+        option.className += "collection-item " + slotClass;
+        option.setAttribute("href", "#/")
+        option.value = item.id;
+        option.style.display = "none";
+        option.textContent = item.name;
+        slot.appendChild(option);
+    }
     function whichSlot(x) {
         let slot;
 
@@ -157,27 +164,138 @@ $(function () {
         return slot
     }
     function loadEventListeners() {
-        document.querySelectorAll("select").forEach(function (selector) {
-            selector.addEventListener("change", function () {
-                generateUnit(selectUnit.value);
-            })
+        document.addEventListener("mousedown", function (e) {
+            if (!e.target.classList.contains("collection-item")) {
+                document.querySelectorAll(".collection").forEach(function (collection) {
+                    collection.parentNode.style.display = "none";
+                })
+            }
         })
+
+        filterUnits.addEventListener("keyup", function (e) {
+            addFilter(e, ".unit-item");
+        })
+
+        filterLHand.addEventListener("keyup", function (e) {
+            addFilter(e, ".lHand-item")
+        })
+
+        filterRHand.addEventListener("keyup", function (e) {
+            addFilter(e, ".rHand-item")
+        })
+
+        filterHead.addEventListener("keyup", function (e) {
+            addFilter(e, ".head-item")
+        })
+
+        filterBody.addEventListener("keyup", function (e) {
+            addFilter(e, ".body-item")
+        })
+
+        filterAccessory1.addEventListener("keyup", function (e) {
+            addFilter(e, ".accessory1-item");
+        })
+
+        filterAccessory2.addEventListener("keyup", function (e) {
+            addFilter(e, ".accessory2-item");
+        })
+
+        filterMateria1.addEventListener("keyup", function (e) {
+            addFilter(e, ".materia1-item");
+        })
+        filterMateria2.addEventListener("keyup", function (e) {
+            addFilter(e, ".materia2-item");
+        })
+        filterMateria3.addEventListener("keyup", function (e) {
+            addFilter(e, ".materia3-item")
+        })
+        filterMateria4.addEventListener("keyup", function (e) {
+            addFilter(e, ".materia4-item");
+        })
+
+        unitCollection.addEventListener("mousedown", function (e) {
+            selectItem(e, filterUnits);
+        })
+
+        equipRHand.addEventListener("mousedown", function (e) {
+            selectItem(e, filterRHand);
+        })
+
+        equipLHand.addEventListener("mousedown", function (e) {
+            selectItem(e, filterLHand);
+        })
+
+        equipHead.addEventListener("mousedown", function (e) {
+            selectItem(e, filterHead);
+        })
+
+        equipBody.addEventListener("mousedown", function (e) {
+            selectItem(e, filterBody);
+        })
+
+        equipAccessory1.addEventListener("mousedown", function (e) {
+            selectItem(e, filterAccessory1);
+        })
+
+        equipAccessory2.addEventListener("mousedown", function (e) {
+            selectItem(e, filterAccessory2);
+        })
+
+        equipMateria1.addEventListener("mousedown", function (e) {
+            selectItem(e, filterMateria1);
+        })
+
+        equipMateria2.addEventListener("mousedown", function (e) {
+            selectItem(e, filterMateria2);
+        })
+        equipMateria3.addEventListener("mousedown", function (e) {
+            selectItem(e, filterMateria3);
+        })
+        equipMateria4.addEventListener("mousedown", function (e) {
+            selectItem(e, filterMateria4);
+        })
+    }
+
+    function selectItem(e, filter) {
+        if (e.target.classList.contains("collection-item")) {
+            filter.value = e.target.textContent;
+            e.target.parentNode.parentNode.style.display = "none";
+            generateUnit();
+        }
+    }
+
+    function addFilter(e, itemClass) {
+        e.preventDefault();
+        const text = e.target.value.toLowerCase();
+        document.querySelectorAll(itemClass).forEach(function (listItem) {
+            if (listItem.firstChild) {
+                const item = listItem.firstChild.textContent.toLowerCase();
+                if (item.indexOf(text) != -1 && item.indexOf(text) != null) {
+                    listItem.parentNode.parentNode.style.display = "block";
+                    listItem.style.display = "block";
+                }
+                else {
+                    listItem.style.display = "none";
+                }
+            }
+        });
 
     }
 
-    function generateUnit(unitId) {
-        selectedUnit = units.find(unit => unit.id == unitId);
+    function generateUnit() {
+        let x = filterUnits.value;
+        selectedUnit = units.find(unit => unit.name == x);
         selectedUnit.equipment = {};
-        selectedUnit.equipment.lHand = equipment.find(equip => equip.id == equipLHand.value);
-        selectedUnit.equipment.rHand = equipment.find(equip => equip.id == equipRHand.value);
-        selectedUnit.equipment.accessory1 = equipment.find(equip => equip.id == equipAccessory1.value);
-        selectedUnit.equipment.accessory2 = equipment.find(equip => equip.id == equipAccessory2.value);
-        selectedUnit.equipment.body = equipment.find(equip => equip.id == equipBody.value);
-        selectedUnit.equipment.head = equipment.find(equip => equip.id == equipHead.value);
-        selectedUnit.equipment.materia1 = equipment.find(equip => equip.id == equipMateria1.value);
-        selectedUnit.equipment.materia2 = equipment.find(equip => equip.id == equipMateria2.value);
-        selectedUnit.equipment.materia3 = equipment.find(equip => equip.id == equipMateria3.value);
-        selectedUnit.equipment.materia4 = equipment.find(equip => equip.id == equipMateria4.value);
+        selectedUnit.equipment.lHand = equipment.find(equip => equip.name == filterLHand.value);
+        selectedUnit.equipment.rHand = equipment.find(equip => equip.name == filterRHand.value);
+        selectedUnit.equipment.accessory1 = equipment.find(equip => equip.name == filterAccessory1.value);
+        selectedUnit.equipment.accessory2 = equipment.find(equip => equip.name == filterAccessory2.value);
+        selectedUnit.equipment.body = equipment.find(equip => equip.name == filterBody.value);
+        selectedUnit.equipment.head = equipment.find(equip => equip.name == filterHead.value);
+        selectedUnit.equipment.materia1 = equipment.find(equip => equip.name == filterMateria1.value);
+        selectedUnit.equipment.materia2 = equipment.find(equip => equip.name == filterMateria2.value);
+        selectedUnit.equipment.materia3 = equipment.find(equip => equip.name == filterMateria3.value);
+        selectedUnit.equipment.materia4 = equipment.find(equip => equip.name == filterMateria4.value);
         selectedUnit.stats = {
             hp: 0,
             mp: 0,
@@ -214,8 +332,10 @@ $(function () {
             disease: 0,
             petrification: 0,
             charm: 0,
-            stop: 0
+            stop: 0,
+            death: 0
         };
+
         calcStats(selectedUnit);
         calcResists(selectedUnit);
 
@@ -242,6 +362,10 @@ $(function () {
                     unit.stats.def += itemValue;
                 if (mod == "defPercent")
                     unit.stats.defPercent += itemValue;
+                if (mod == "spr")
+                    unit.stats.spr += itemValue;
+                if (mod == "sprPercent")
+                    unit.stats.sprPercent += itemValue;
                 if (mod == "evade") {
                     $.each(itemValue, function (evadeType, value) {
                         if (evadeType == "physical")
@@ -258,7 +382,6 @@ $(function () {
         $.each(unit.equipment, function (slot, item) {
             if (item.resist != null) {
                 $.each(item.resist, function (index, resist) {
-                    console.log(item.name + ": " + resist.name + " + " + resist.percent)
                     if (resist.name == "fire")
                         unit.resists.fire += resist.percent;
                     if (resist.name == "ice")
@@ -295,6 +418,8 @@ $(function () {
                         unit.resists.charm += resist.percent;
                     if (resist.name == "stop")
                         unit.resists.stop += resist.percent;
+                    if (resist.name == "death")
+                        unit.resists.death += resist.percent;
                 })
             }
         })
@@ -335,6 +460,8 @@ $(function () {
         unitResistDisease.textContent = unit.resists.disease;
         unitResistCharm.textContent = unit.resists.charm;
         unitResistStop.textContent = unit.resists.stop;
+        unitResistDeath.textContent = unit.resists.death;
+
         console.log(unit)
     }
 })
