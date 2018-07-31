@@ -65,31 +65,7 @@ let equipmentDataSource = "/data/equipment.json"
 let units;
 let equipment;
 let selectedUnit = {};
-selectedUnit.id = 0;
-selectedUnit.name = "";
-selectedUnit.type = "";
-selectedUnit.stats = { atk: 0, mag: 0, def: 0, spr: 0, atkPercent: 0, magPercent: 0, defPercent: 0, sprPercent: 0, provoke: 0, pEvade: 0, mEvade: 0 };
-selectedUnit.resists = {
-    fire: 0,
-    ice: 0,
-    lightning: 0,
-    water: 0,
-    wind: 0,
-    earth: 0,
-    holy: 0,
-    dark: 0,
-    poison: 0,
-    blind: 0,
-    sleep: 0,
-    silence: 0,
-    paralysis: 0,
-    confuse: 0,
-    disease: 0,
-    petrification: 0,
-    charm: 0,
-    stop: 0,
-    death: 0
-}
+
 
 $(function () {
     console.log("Ready");
@@ -124,6 +100,7 @@ $(function () {
 
                     else if (slot == "head") {
                         setCollectionItem(equipHead, "head-item", equip);
+
                     }
 
                     else if (slot == "body") {
@@ -204,7 +181,23 @@ $(function () {
         option.value = item.id;
         option.style.display = "none";
         option.textContent = item.name;
+
+        Object.keys(item).forEach(function (mod, index) {
+            if (isBasicMod(mod)) {
+                option.textContent += ", " + mod + " + " + item[mod];
+            }
+        })
+
         slot.appendChild(option);
+    }
+
+    function isBasicMod(mod) {
+        let isBasic = false;
+        if (mod == "hp" || mod == "mp" || mod == "atk" || mod == "mag" || mod == "def" || mod == "spr" ||
+            mod == "hpPercent" || mod == "mpPercent" || mod == "atkPercent" || mod == "magPercent" || mod == "defPercent" || mod == "sprPercent")
+            isBasic = true;
+
+        return isBasic
     }
     function whichSlot(x) {
         let slot;
@@ -224,6 +217,10 @@ $(function () {
 
         else if (x.type == "materia") {
             slot = "materia";
+        }
+
+        else if (x.type == "summon" || x.type == "event" || x.type == "story" || x.type == "friendPoints") {
+            slot = "unit"
         }
         else {
             console.error(x.id + ": Unknown type [" + x.type + "]");
@@ -338,7 +335,7 @@ $(function () {
 
     function selectItem(e, filter) {
         if (e.target.classList.contains("collection-item")) {
-            filter.value = e.target.textContent;
+            filter.value = e.target.textContent.split(",")[0];
             e.target.parentNode.parentNode.style.display = "none";
             generateUnit();
         }
@@ -365,63 +362,78 @@ $(function () {
     function generateUnit() {
         let x = filterUnits.value;
         selectedUnit = units.find(unit => unit.name == x);
-        selectedUnit.equipment = {};
-        selectedUnit.equipment.lHand = equipment.find(equip => equip.name == filterLHand.value);
-        selectedUnit.equipment.rHand = equipment.find(equip => equip.name == filterRHand.value);
-        selectedUnit.equipment.accessory1 = equipment.find(equip => equip.name == filterAccessory1.value);
-        selectedUnit.equipment.accessory2 = equipment.find(equip => equip.name == filterAccessory2.value);
-        selectedUnit.equipment.body = equipment.find(equip => equip.name == filterBody.value);
-        selectedUnit.equipment.head = equipment.find(equip => equip.name == filterHead.value);
-        selectedUnit.equipment.materia1 = equipment.find(equip => equip.name == filterMateria1.value);
-        selectedUnit.equipment.materia2 = equipment.find(equip => equip.name == filterMateria2.value);
-        selectedUnit.equipment.materia3 = equipment.find(equip => equip.name == filterMateria3.value);
-        selectedUnit.equipment.materia4 = equipment.find(equip => equip.name == filterMateria4.value);
+        if (selectedUnit) {
+            selectedUnit.equipment = {};
+            if (filterLHand.value)
+                selectedUnit.equipment.lHand = equipment.find(equip => equip.name == filterLHand.value.split(",")[0]);
+            if (filterRHand.value)
+                selectedUnit.equipment.rHand = equipment.find(equip => equip.name == filterRHand.value.split(",")[0]);
+            if (filterAccessory1.value)
+                selectedUnit.equipment.accessory1 = equipment.find(equip => equip.name == filterAccessory1.value.split(",")[0]);
+            if (filterAccessory2.value)
+                selectedUnit.equipment.accessory2 = equipment.find(equip => equip.name == filterAccessory2.value.split(",")[0]);
+            if (filterBody.value)
+                selectedUnit.equipment.body = equipment.find(equip => equip.name == filterBody.value.split(",")[0]);
+            if (filterHead.value)
+                selectedUnit.equipment.head = equipment.find(equip => equip.name == filterHead.value.split(",")[0]);
+            if (filterMateria1.value)
+                selectedUnit.equipment.materia1 = equipment.find(equip => equip.name == filterMateria1.value.split(",")[0]);
+            if (filterMateria2.value)
+                selectedUnit.equipment.materia2 = equipment.find(equip => equip.name == filterMateria2.value.split(",")[0]);
+            if (filterMateria3.value)
+                selectedUnit.equipment.materia3 = equipment.find(equip => equip.name == filterMateria3.value.split(",")[0]);
+            if (filterMateria4.value)
+                selectedUnit.equipment.materia4 = equipment.find(equip => equip.name == filterMateria4.value.split(",")[0]);
+            console.log(filterLHand.value.split(",")[0]);
 
-        selectedUnit.stats = {
-            hp: 0,
-            mp: 0,
-            atk: 0,
-            mag: 0,
-            def: 0,
-            spr: 0,
-            hpPercent: 0,
-            mpPercent: 0,
-            atkPercent: 0,
-            magPercent: 0,
-            defPercent: 0,
-            sprPercent: 0,
-            provoke: 0,
-            pEvade: 0,
-            mEvade: 0
+            selectedUnit.stats = {
+                hp: 0,
+                mp: 0,
+                atk: 0,
+                mag: 0,
+                def: 0,
+                spr: 0,
+                hpPercent: 0,
+                mpPercent: 0,
+                atkPercent: 0,
+                magPercent: 0,
+                defPercent: 0,
+                sprPercent: 0,
+                provoke: 0,
+                pEvade: 0,
+                mEvade: 0
+            }
+            selectedUnit.resists = {
+                fire: 0,
+                ice: 0,
+                lightning: 0,
+                water: 0,
+                wind: 0,
+                earth: 0,
+                holy: 0,
+                dark: 0,
+                poison: 0,
+                blind: 0,
+                sleep: 0,
+                silence: 0,
+                paralysis: 0,
+                confuse: 0,
+                disease: 0,
+                petrification: 0,
+                charm: 0,
+                stop: 0,
+                death: 0
+            };
+
+            calcStats(selectedUnit);
+            calcResists(selectedUnit);
+            displayUnit(selectedUnit);
         }
-        selectedUnit.resists = {
-            fire: 0,
-            ice: 0,
-            lightning: 0,
-            water: 0,
-            wind: 0,
-            earth: 0,
-            holy: 0,
-            dark: 0,
-            poison: 0,
-            blind: 0,
-            sleep: 0,
-            silence: 0,
-            paralysis: 0,
-            confuse: 0,
-            disease: 0,
-            petrification: 0,
-            charm: 0,
-            stop: 0,
-            death: 0
-        };
-
-        calcStats(selectedUnit);
-        calcResists(selectedUnit);
-
-        displayUnit(selectedUnit);
     }
 
+    function equipItem(unit, item) {
+
+    }
     function calcStats(unit) {
         /*
         Cycles through unit slots
@@ -517,7 +529,7 @@ $(function () {
     }
 
     function displayUnit(unit) {
-        unitName.textContent = selectedUnit.name;
+        unitName.textContent = unit.name;
         unitHp.textContent = unit.stats.hp;
         unitMp.textContent = unit.stats.mp;
         unitAtk.textContent = unit.stats.atk;
