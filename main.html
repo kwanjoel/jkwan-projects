@@ -6,14 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>JKwan Projects</title>
-    <link rel="shortcut icon" type="image/x-icon" href="public/images/doge.jpg">
+    <link rel="shortcut icon" type="image/x-icon" href="/images/doge.jpg">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
         crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
         crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
-    <link href="css/main.css" rel="stylesheet" />
+    <link href="/css/main.css" rel="stylesheet" />
 
 </head>
 
@@ -30,8 +30,18 @@
                             <!-- Select unit -->
                             <div class="card">
                                 <div class="card-content">
-                                    <label for="filter-units">Select a unit</label>
-                                    <input type="text" id="filter-units">
+                                    <div class="row">
+                                        <div class="col-md-12 mx-auto">
+                                            <label for="filter-units">Select a unit</label>
+                                            <input type="text" id="filter-units">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2 offset-md-10">
+                                            <button id="clear-btn" class="btn red">Clear All</button>
+                                        </div>
+                                    </div>
+
                                 </div>
                                 <div class="col-md-12">
                                     <ul class="collection" id="unit-collection">
@@ -165,136 +175,123 @@
                         <!-- Unit Equips -->
                         <div class="card">
                             <div class="card-content">
+
                                 <div class="row">
                                     <div class="col-md-12">
                                         <h5 class="card-title equipment">Equipment</h5>
                                     </div>
+
                                 </div>
 
+                                <!-- LEFT -->
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <div class="input-field">
-                                            <input type="text" class="" id="filter-right-hand">
-                                            <label for="filter-left-hand">Right hand</label>
+                                        <div class="row">
+                                            <div class="input-field col-md-12">
+                                                <input type="text" class="" id="filter-right-hand">
+                                                <label for="filter-left-hand">Right hand</label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <ul class="collection" id="equip-right-hand"></ul>
+                                        </div>
+                                        <div class="row">
+                                            <div class="input-field col-md-12">
+                                                <input type="text" id="filter-head">
+                                                </input>
+                                                <label>Head</label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <ul class="collection" id="equip-head"></ul>
+                                        </div>
+                                        <div class="row">
+                                            <div class="input-field col-md-12 ">
+                                                <input type="text" id="filter-accessory-1">
+                                                </input>
+                                                <label for="filter-accessory-1">Accessory 1</label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <ul class="collection" id="equip-accessory-1"></ul>
+                                        </div>
+                                        <div class="row">
+                                            <div class="input-field col-md-12 ">
+                                                <input type="text" id="filter-materia-1">
+                                                </input>
+                                                <label for="filter-materia-1">Slot 1</label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <ul class="collection" id="equip-materia-1"></ul>
+                                        </div>
+                                        <div class="row">
+                                            <div class="input-field col-md-12">
+                                                <input type="text" id="filter-materia-3">
+                                                </input>
+                                                <label for="filter-materia-3">Slot 3</label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <ul class="collection" id="equip-materia-3"></ul>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="input-field">
-                                            <input type="text" class="" id="filter-left-hand">
-                                            <label for="filter-left-hand">Left hand</label>
+                                    <!-- /LEFT -->
+                                    <!-- RIGHT -->
+                                    <div class="col-md-6 right">
+                                        <div class="row">
+                                            <div class="input-field col-md-12">
+                                                <input type="text" class="" id="filter-left-hand">
+                                                <label for="filter-left-hand">Left hand</label>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <ul class="collection" id="equip-right-hand"></ul>
-                                    </div>
-                                    <div class="col-md-6 offset-md-6">
-                                        <ul class="collection" id="equip-left-hand"></ul>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="input-field">
-                                            <input type="text" id="filter-head">
-                                            </input>
-                                            <label>Head</label>
+                                        <div class="row">
+                                            <ul class="collection" id="equip-left-hand"></ul>
                                         </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="input-field">
-                                            <input type="text" id="filter-body">
-                                            <label for="filter-body">Body</label>
+                                        <div class="row">
+                                            <div class="input-field col-md-12">
+                                                <input type="text" id="filter-body">
+                                                <label for="filter-body">Body</label>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <ul class="collection" id="equip-head"></ul>
-                                    </div>
-                                    <div class="col-md-6 offset-md-6">
-                                        <ul class="collection" id="equip-body"></ul>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="input-field ">
-                                            <input type="text" id="filter-accessory-1">
-                                            </input>
-                                            <label for="filter-accessory-1">Accessory 1</label>
+                                        <div class="row">
+                                            <ul class="collection" id="equip-body"></ul>
                                         </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="input-field">
-                                            <input type="text" id="filter-accessory-2">
-                                            </input>
-                                            <label for="filter-accessory-2">Accessory 2</label>
+                                        <div class="row">
+                                            <div class="input-field col-md-12">
+                                                <input type="text" id="filter-accessory-2">
+                                                </input>
+                                                <label for="filter-accessory-2">Accessory 2</label>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <ul class="collection" id="equip-accessory-1"></ul>
-                                    </div>
-                                    <div class="col-md-6 offset-md-6">
-                                        <ul class="collection" id="equip-accessory-2"></ul>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-12 ">
-                                        <h5 class="card-title">Materia</h5>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 ">
-                                        <div class="input-field ">
-                                            <input type="text" id="filter-materia-1">
-                                            </input>
-                                            <label for="filter-materia-1">Slot 1</label>
+                                        <div class="row">
+                                            <ul class="collection" id="equip-accessory-2"></ul>
                                         </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="input-field ">
-                                            <input type="text" id="filter-materia-2">
-                                            </input>
-                                            <label for="filter-materia-2">Slot 2</label>
+                                        <!-- <div class="row">
+                                        <div class="col-md-12">
+                                            <h5 class="card-title">Materia</h5>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <ul class="collection" id="equip-materia-1"></ul>
-                                    </div>
-                                    <div class="col-md-6 offset-md-6">
-                                        <ul class="collection" id="equip-materia-2"></ul>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="input-field">
-                                            <input type="text" id="filter-materia-3">
-                                            </input>
-                                            <label for="filter-materia-3">Slot 3</label>
+                                    </div> -->
+                                        <div class="row">
+                                            <div class="input-field col-md-12 ">
+                                                <input type="text" id="filter-materia-2">
+                                                </input>
+                                                <label for="filter-materia-2">Slot 2</label>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="input-field">
-                                            <input type="text" id="filter-materia-4">
-                                            </input>
-                                            <label for="filter-materia-4">Slot 4</label>
+                                        <div class="row">
+                                            <ul class="collection" id="equip-materia-2"></ul>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <ul class="collection" id="equip-materia-3"></ul>
-                                    </div>
-                                    <div class="col-md-6 offset-md-6">
-                                        <ul class="collection" id="equip-materia-4"></ul>
+                                        <div class="row">
+                                            <div class="input-field col-md-12">
+                                                <input type="text" id="filter-materia-4">
+                                                </input>
+                                                <label for="filter-materia-4">Slot 4</label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <ul class="collection" id="equip-materia-4"></ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -303,7 +300,6 @@
                 </div>
             </div>
         </div>
-    </div>
     </div>
 
     <!-- Scripts -->
