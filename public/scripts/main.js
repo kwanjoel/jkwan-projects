@@ -62,9 +62,15 @@ const clearBtn = document.querySelector("#clear-btn");
 //Data
 let unitDataSource = "/data/units.json"
 let equipmentDataSource = "/data/equipment.json"
-let units;
-let equipment;
-let selectedUnit = {};
+let units = [];
+let equipment = {
+    weapons: [],
+    heads: [],
+    bodies: [],
+    accessories: [],
+    materia: [],
+}
+let selectedUnit;
 
 
 $(function () {
@@ -72,123 +78,113 @@ $(function () {
     intializeData();
     loadEventListeners();
 
-
-
-
-
-
     function intializeData() {
         $.get(unitDataSource, (data) => {
-            units = data;
-            units.forEach(function (unit) {
-                if (unit != null)
-                    setCollectionItem(unitCollection, "unit-item", unit)
-
+            data.forEach(function (unit) {
+                units.push(unit);
             })
 
         }).then(function () {
             $.get(equipmentDataSource, (data) => {
-                equipment = data;
-                equipment.forEach(function (equip) {
-                    let slot = whichSlot(equip);
 
-                    if (slot == "weapon") {
-                        setCollectionItem(equipLHand, "lHand-item", equip);
-                        setCollectionItem(equipRHand, "rHand-item", equip)
+                data.forEach(function (item) {
+                    let slot = whichSlot(item);
 
-                    }
-
-                    else if (slot == "head") {
-                        setCollectionItem(equipHead, "head-item", equip);
-
-                    }
-
-                    else if (slot == "body") {
-                        setCollectionItem(equipBody, "body-item", equip);
-                    }
-
-                    else if (slot == "accessory") {
-                        setCollectionItem(equipAccessory1, "accessory1-item", equip);
-                        setCollectionItem(equipAccessory2, "accessory2-item", equip);
-
-                    }
-
-                    else if (slot == "materia") {
-                        setCollectionItem(equipMateria1, "materia1-item", equip);
-                        setCollectionItem(equipMateria2, "materia2-item", equip);
-                        setCollectionItem(equipMateria3, "materia3-item", equip);
-                        setCollectionItem(equipMateria4, "materia4-item", equip);
-                    }
+                    if (slot == "weapon")
+                        equipment.weapons.push(item);
+                    else if (slot == "head")
+                        equipment.heads.push(item);
+                    else if (slot == "body")
+                        equipment.bodies.push(item);
+                    else if (slot == "accessory")
+                        equipment.accessories.push(item);
+                    else if (slot == "materia")
+                        equipment.materia.push(item);
                 })
+
 
 
             }).then(function () {
+                //Hide all collections
                 document.querySelectorAll(".collection").forEach(function (collection) {
-                    collection.parentElement.style.display = "none";
+                    collection.style.display = "none";
                 })
-
                 clearFilters();
-
-                generateUnit();
             })
         })
     }
+
     function clearFilters() {
-        document.querySelectorAll("input").forEach(function (filter) {
-            filter.value = "";
-        })
-
+        document.querySelectorAll("input").forEach((filter) => filter.value = "")
         unitName.textContent = "";
-        unitHp.textContent = 0;
-        unitMp.textContent = 0;
-        unitAtk.textContent = 0;
-        unitMag.textContent = 0;
-        unitDef.textContent = 0;
-        unitSpr.textContent = 0;
-        unitHpPercent.textContent = 0;
-        unitMpPercent.textContent = 0;
-        unitAtkPercent.textContent = 0;
-        unitMagPercent.textContent = 0;
-        unitDefPercent.textContent = 0;
-        unitSprPercent.textContent = 0;
-        unitProvoke.textContent = 0;
-        unitPEvade.textContent = 0;
-        unitMEvade.textContent = 0;
-        unitResistFire.textContent = 0;
-        unitResistIce.textContent = 0;
-        unitResistLightning.textContent = 0;
-        unitResistWater.textContent = 0;
-        unitResistWind.textContent = 0;
-        unitResistEarth.textContent = 0;
-        unitResistHoly.textContent = 0;
-        unitResistDark.textContent = 0;
-        unitResistPoison.textContent = 0;
-        unitResistBlind.textContent = 0;
-        unitResistSleep.textContent = 0;
-        unitResistSilence.textContent = 0;
-        unitResistParalysis.textContent = 0;
-        unitResistConfuse.textContent = 0;
-        unitResistPetrification.textContent = 0;
-        unitResistDisease.textContent = 0;
-        unitResistCharm.textContent = 0;
-        unitResistStop.textContent = 0;
-        unitResistDeath.textContent = 0;
+        document.querySelectorAll("td").forEach((col) => col.textContent = 0);
     }
-    function setCollectionItem(slot, slotClass, item) {
-        let option = document.createElement("a");
-        option.className += "collection-item " + slotClass;
-        option.setAttribute("href", "#/")
-        option.value = item.id;
-        option.style.display = "none";
-        option.textContent = item.name;
 
-        Object.keys(item).forEach(function (mod, index) {
-            if (isBasicMod(mod)) {
-                option.textContent += ", " + mod + " + " + item[mod];
-            }
-        })
+    function addFilter(e, index) {
+        //Filter
+        let filter = e.target;
+        const text = filter.value.toLowerCase();
 
-        slot.appendChild(option);
+        //Get filter's corresponding collection
+        let collection = document.querySelectorAll(".collection")[index];
+
+        //Push appropriate units
+        if (collection.id == "unit-collection") {
+            setCollectionItems(units, text, collection);
+        }
+        else if (collection.id == "equip-right-hand" || collection.id == "equip-left-hand") {
+            setCollectionItems(equipment.weapons, text, collection)
+        }
+
+        else if (collection.id == "equip-head") {
+            setCollectionItems(equipment.heads, text, collection)
+        }
+        else if (collection.id == "equip-body") {
+            setCollectionItems(equipment.bodies, text, collection)
+        }
+
+        else if (collection.id == "equip-accessory-1" || collection.id == "equip-accessory-2") {
+            setCollectionItems(equipment.accessories, text, collection);
+        }
+
+        else if (collection.id == "equip-materia-1" || collection.id == "equip-materia-2" || collection.id == "equip-materia-3" || collection.id == "equip-materia-4") {
+            setCollectionItems(equipment.materia, text, collection)
+        }
+        else {
+            //For items that dont have a name
+        }
+    }
+
+    function setCollectionItems(itemList, text, collection) {
+        //Clear current list
+        collection.style.display = "block";
+        collection.innerHTML = "";
+        if (text != "") {
+            itemList.forEach(function (item) {
+                if (item.name != null) {
+                    const itemName = item.name.toLowerCase();
+                    if (itemName.indexOf(text) != -1) {
+                        let listItem = document.createElement("a");
+                        listItem.className += "collection-item";
+                        listItem.textContent = item.name;
+                        if (whichSlot(item) != "unit") {
+                            Object.keys(item).forEach(function (mod) {
+                                if (mod == "hp" || mod == "mp" || mod == "atk" || mod == "mag" || mod == "def" || mod == "spr" ||
+                                    mod == "hpPercent" || mod == "mpPercent" || mod == "atkPercent" || mod == "magPercent" || mod == "defPercent" || mod == "sprPercent") {
+                                    listItem.textContent += ", " + mod + " + " + item[mod];
+                                }
+                            })
+                        }
+                        collection.append(listItem);
+                    }
+                }
+                else {
+                    //Unknown item
+                }
+            })
+        } else {
+            collection.style.display = "none";
+        }
     }
 
     function isBasicMod(mod) {
@@ -199,6 +195,7 @@ $(function () {
 
         return isBasic
     }
+
     function whichSlot(x) {
         let slot;
 
@@ -227,14 +224,8 @@ $(function () {
         }
         return slot
     }
+
     function loadEventListeners() {
-        document.addEventListener("mousedown", function (e) {
-            if (!e.target.classList.contains("collection-item")) {
-                document.querySelectorAll(".collection").forEach(function (collection) {
-                    collection.parentNode.style.display = "none";
-                })
-            }
-        })
 
         document.querySelectorAll("input").forEach(function (filter) {
             filter.addEventListener("keypress", function (e) {
@@ -249,196 +240,152 @@ $(function () {
             clearFilters();
         })
 
-        filterUnits.addEventListener("keyup", function (e) {
-            addFilter(e, ".unit-item");
+
+        document.querySelectorAll("input").forEach(function (filter, index) {
+            filter.addEventListener("keyup", function (e) {
+                addFilter(e, index);
+            });
         })
 
-        filterLHand.addEventListener("keyup", function (e) {
-            addFilter(e, ".lHand-item")
-        })
-
-        filterRHand.addEventListener("keyup", function (e) {
-            addFilter(e, ".rHand-item")
-        })
-
-        filterHead.addEventListener("keyup", function (e) {
-            addFilter(e, ".head-item")
-        })
-
-        filterBody.addEventListener("keyup", function (e) {
-            addFilter(e, ".body-item")
-        })
-
-        filterAccessory1.addEventListener("keyup", function (e) {
-            addFilter(e, ".accessory1-item");
-        })
-
-        filterAccessory2.addEventListener("keyup", function (e) {
-            addFilter(e, ".accessory2-item");
-        })
-
-        filterMateria1.addEventListener("keyup", function (e) {
-            addFilter(e, ".materia1-item");
-        })
-        filterMateria2.addEventListener("keyup", function (e) {
-            addFilter(e, ".materia2-item");
-        })
-        filterMateria3.addEventListener("keyup", function (e) {
-            addFilter(e, ".materia3-item")
-        })
-        filterMateria4.addEventListener("keyup", function (e) {
-            addFilter(e, ".materia4-item");
-        })
-
-        unitCollection.addEventListener("mousedown", function (e) {
-            selectItem(e, filterUnits);
-        })
-
-        equipRHand.addEventListener("mousedown", function (e) {
-            selectItem(e, filterRHand);
-        })
-
-        equipLHand.addEventListener("mousedown", function (e) {
-            selectItem(e, filterLHand);
-        })
-
-        equipHead.addEventListener("mousedown", function (e) {
-            selectItem(e, filterHead);
-        })
-
-        equipBody.addEventListener("mousedown", function (e) {
-            selectItem(e, filterBody);
-        })
-
-        equipAccessory1.addEventListener("mousedown", function (e) {
-            selectItem(e, filterAccessory1);
-        })
-
-        equipAccessory2.addEventListener("mousedown", function (e) {
-            selectItem(e, filterAccessory2);
-        })
-
-        equipMateria1.addEventListener("mousedown", function (e) {
-            selectItem(e, filterMateria1);
-        })
-
-        equipMateria2.addEventListener("mousedown", function (e) {
-            selectItem(e, filterMateria2);
-        })
-        equipMateria3.addEventListener("mousedown", function (e) {
-            selectItem(e, filterMateria3);
-        })
-        equipMateria4.addEventListener("mousedown", function (e) {
-            selectItem(e, filterMateria4);
+        document.querySelectorAll(".collection").forEach(function (collection) {
+            collection.addEventListener("click", function (e) {
+                selectItem(e);
+            })
         })
     }
 
-    function selectItem(e, filter) {
+    /**
+     * When you click on a collection-item
+     * @param {Event} e 
+     */
+    function selectItem(e) {
+        //Click on a collection item
         if (e.target.classList.contains("collection-item")) {
+
+            let filter = getCorrespondingFilter(e.target.parentNode.id);
+            //Set the filter's value
             filter.value = e.target.textContent.split(",")[0];
-            e.target.parentNode.parentNode.style.display = "none";
-            generateUnit();
+
+            //equip the selected item
+            equipItem(e.target);
+
+            //Close all other collections
+            document.querySelectorAll(".collection").forEach(function (collection) {
+                collection.style.display = "none";
+            })
         }
     }
 
-    function addFilter(e, itemClass) {
-        e.preventDefault();
-        const text = e.target.value.toLowerCase();
-        document.querySelectorAll(itemClass).forEach(function (listItem) {
-            if (listItem.firstChild) {
-                const item = listItem.firstChild.textContent.toLowerCase();
-                if (item.indexOf(text) != -1 && item.indexOf(text) != null) {
-                    listItem.parentNode.parentNode.style.display = "block";
-                    listItem.style.display = "block";
-                }
-                else {
-                    listItem.style.display = "none";
-                }
-            }
-        });
+    function equipItem(item) {
+        let collection = item.parentNode;
 
-    }
-
-    function generateUnit() {
-        let x = filterUnits.value;
-        selectedUnit = units.find(unit => unit.name == x);
-        if (selectedUnit) {
+        //Selecting a unit
+        if (collection.id == "unit-collection") {
+            selectedUnit = units.find((unit) => unit.name == item.textContent);
             selectedUnit.equipment = {};
-            if (filterLHand.value)
-                selectedUnit.equipment.lHand = equipment.find(equip => equip.name == filterLHand.value.split(",")[0]);
-            if (filterRHand.value)
-                selectedUnit.equipment.rHand = equipment.find(equip => equip.name == filterRHand.value.split(",")[0]);
-            if (filterAccessory1.value)
-                selectedUnit.equipment.accessory1 = equipment.find(equip => equip.name == filterAccessory1.value.split(",")[0]);
-            if (filterAccessory2.value)
-                selectedUnit.equipment.accessory2 = equipment.find(equip => equip.name == filterAccessory2.value.split(",")[0]);
-            if (filterBody.value)
-                selectedUnit.equipment.body = equipment.find(equip => equip.name == filterBody.value.split(",")[0]);
-            if (filterHead.value)
-                selectedUnit.equipment.head = equipment.find(equip => equip.name == filterHead.value.split(",")[0]);
-            if (filterMateria1.value)
-                selectedUnit.equipment.materia1 = equipment.find(equip => equip.name == filterMateria1.value.split(",")[0]);
-            if (filterMateria2.value)
-                selectedUnit.equipment.materia2 = equipment.find(equip => equip.name == filterMateria2.value.split(",")[0]);
-            if (filterMateria3.value)
-                selectedUnit.equipment.materia3 = equipment.find(equip => equip.name == filterMateria3.value.split(",")[0]);
-            if (filterMateria4.value)
-                selectedUnit.equipment.materia4 = equipment.find(equip => equip.name == filterMateria4.value.split(",")[0]);
-            console.log(filterLHand.value.split(",")[0]);
-
-            selectedUnit.stats = {
-                hp: 0,
-                mp: 0,
-                atk: 0,
-                mag: 0,
-                def: 0,
-                spr: 0,
-                hpPercent: 0,
-                mpPercent: 0,
-                atkPercent: 0,
-                magPercent: 0,
-                defPercent: 0,
-                sprPercent: 0,
-                provoke: 0,
-                pEvade: 0,
-                mEvade: 0
-            }
-            selectedUnit.resists = {
-                fire: 0,
-                ice: 0,
-                lightning: 0,
-                water: 0,
-                wind: 0,
-                earth: 0,
-                holy: 0,
-                dark: 0,
-                poison: 0,
-                blind: 0,
-                sleep: 0,
-                silence: 0,
-                paralysis: 0,
-                confuse: 0,
-                disease: 0,
-                petrification: 0,
-                charm: 0,
-                stop: 0,
-                death: 0
-            };
-
-            calcStats(selectedUnit);
-            calcResists(selectedUnit);
-            displayUnit(selectedUnit);
+            selectedUnit.resists = {};
+            selectedUnit.stats = {};
         }
+
+
+        //Equipment Selection
+        else {
+            if (collection.id == "equip-left-hand") {
+                selectedUnit.equipment.lHand = findItem(item.textContent, equipment.weapons);
+            }
+            if (collection.id == "equip-right-hand") {
+                selectedUnit.equipment.rHand = findItem(item.textContent, equipment.weapons);
+            }
+            if (collection.id == "equip-head") {
+                selectedUnit.equipment.head = findItem(item.textContent, equipment.heads);
+            }
+            if (collection.id == "equip-body") {
+                selectedUnit.equipment.body = findItem(item.textContent, equipment.bodies);
+            }
+            if (collection.id == "equip-accessory-1") {
+                selectedUnit.equipment.accessory_1 = findItem(item.textContent, equipment.accessories);
+            }
+            if (collection.id == "equip-accesory-2") {
+                selectedUnit.equipment.accessory_2 = findItem(item.textContent, equipment.accessories);
+            }
+            if (collection.id == "equip-materia-1") {
+                selectedUnit.equipment.materia_1 = findItem(item.textContent, equipment.materia);
+            }
+            if (collection.id == "equip-materia-2") {
+                selectedUnit.equipment.materia_2 = findItem(item.textContent, equipment.materia);
+            }
+            if (collection.id == "equip-materia-3") {
+                selectedUnit.equipment.materia_3 = findItem(item.textContent, equipment.materia);
+            }
+            if (collection.id == "equip-materia-4") {
+                selectedUnit.equipment.materia_4 = findItem(item.textContent, equipment.materia);
+            }
+        }
+        generateUnit();
+    }
+    /**
+     * 
+     * @param {String} itemString 
+     * @param {Array} equipment 
+     */
+    function findItem(itemString, equipment) {
+        return equipment.find((item) => item.name == itemString.split(",")[0])
+    }
+    function getCorrespondingFilter(collectionId) {
+        let filter;
+        document.querySelectorAll(".collection").forEach(function (collection, index) {
+            if (collectionId == collection.id)
+                filter = document.querySelectorAll("input")[index];
+        })
+        return filter;
+    }
+    function generateUnit() {
+        selectedUnit.stats = {
+            hp: 0,
+            mp: 0,
+            atk: 0,
+            mag: 0,
+            def: 0,
+            spr: 0,
+            hpPercent: 0,
+            mpPercent: 0,
+            atkPercent: 0,
+            magPercent: 0,
+            defPercent: 0,
+            sprPercent: 0,
+            provoke: 0,
+            pEvade: 0,
+            mEvade: 0
+        }
+        selectedUnit.resists = {
+            fire: 0,
+            ice: 0,
+            lightning: 0,
+            water: 0,
+            wind: 0,
+            earth: 0,
+            holy: 0,
+            dark: 0,
+            poison: 0,
+            blind: 0,
+            sleep: 0,
+            silence: 0,
+            paralysis: 0,
+            confuse: 0,
+            disease: 0,
+            petrification: 0,
+            charm: 0,
+            stop: 0,
+            death: 0
+        };
+
+        calcStats(selectedUnit);
+        calcResists(selectedUnit);
+        displayUnit(selectedUnit);
     }
 
-    function equipItem(unit, item) {
 
-    }
     function calcStats(unit) {
-        /*
-        Cycles through unit slots
-        Cycles through stats of each item
-        */
 
         $.each(unit.equipment, function (slot, item) {
             if (item != null) {
